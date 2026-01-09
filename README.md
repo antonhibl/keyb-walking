@@ -1,5 +1,4 @@
-
-# Keyboard Walk Generator
+**# Keyboard Walk Generator
 
 A high-performance Python tool for generating password wordlists based on keyboard walking patterns (e.g., `1qaz`, `xsw2`, `qwer`). This tool is optimized for speed using buffered I/O and C-based iterators to handle massive lists (33M+ combinations) efficiently.
 
@@ -7,15 +6,25 @@ A high-performance Python tool for generating password wordlists based on keyboa
 
 * **`kbwalk.py`**: The all-in-one generator with built-in hashing support.
 * **`LICENSE`**: BSD-2-Clause License.
-* `README.md`: This file.
 
 ## Features
 
 * **High Performance:** Uses `itertools` and buffered writing to generate ~33 million lines in seconds.
 * **Modes:** Supports Vertical (`1qaz`), Horizontal (`qwerty`), or Both.
 * **Multi-Hashing:** Can generate **NTLM**, **MD5**, **SHA1**, or **SHA256** hashes directly to skip piping overhead.
+* **Progress Bar:** Includes an optional, high-speed progress bar (requires `tqdm`).
 * **Flexible Output:** Supports raw hash lists or `password:hash` format.
-* **No Dependencies:** Runs on standard Python 3 libraries.
+
+## Installation
+
+The script runs on standard Python 3 libraries. However, for a real-time progress bar, you can install `tqdm`:
+
+```bash
+pip install tqdm
+
+```
+
+*If `tqdm` is not installed, the script automatically falls back to a simple text counter.*
 
 ## Usage
 
@@ -66,6 +75,20 @@ python3 kbwalk.py -m v --hash sha1 --format pwd:hash -f combos.txt
 * `-l`, `--length`: Length of horizontal walk segments (default: 4).
 * `--hash`: Hashing algorithm to apply (`ntlm`, `md5`, `sha1`, `sha256`, `none`).
 * `--format`: Output format (`plain` = hash only, `pwd:hash` = password and hash).
+
+## Performance Testing (Occam)
+
+This script includes a developer hook for the [Occam Complexity Scanner](https://github.com/antonhibl/occam). To verify the time and space complexity efficiency:
+
+1. Clone or install Occam.
+2. Run the following command against `kbwalk.py`:
+
+```bash
+python3 occam.py kbwalk.py --type list --max_n 80 --output complexity.png
+
+```
+
+**⚠️ Warning:** Keep `--max_n` below 100. The algorithm is mathematically O(N^4) for it's time complexity, so high values will result in excessively long runtimes. This test confirms that while Time Complexity is polynomial, **Space Complexity remains efficient (Logarithmic/Constant)** due to the generator implementation.
 
 ## Disclaimer
 

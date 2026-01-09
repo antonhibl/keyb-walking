@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 '''
-Keyboard-Walking Password Generator with Hashing Support
+Keyboard-Walking Password Generator
+Includes optional tqdm support and NTLM/Multi-hashing.
 
 Original Author: Ronald Broberg
 Edited by: Austin Scott & Anton Hibl
 '''
-
 import sys
 import argparse
 import itertools
 import hashlib
+
+try:
+    from tqdm import tqdm
+    TQDM_AVAILABLE = True
+except ImportError:
+    TQDM_AVAILABLE = False
 
 BUFFER_SIZE = 20000
 KEYBOARD_STRING = (
@@ -27,35 +33,29 @@ KB_VERTICAL = [
 ]
 
 def get_horizontal_walks(length):
-    """Generates horizontal walks using a fast sliding window."""
     if length < 1: length = 4
     if length > len(KEYBOARD_STRING): length = len(KEYBOARD_STRING)
     return [KEYBOARD_STRING[i : i + length] for i in range(len(KEYBOARD_STRING) - length + 1)]
 
 def hash_ntlm(password):
-    """NTLM: MD4 of UTF-16LE encoding."""
     return hashlib.new('md4', password.encode('utf-16le')).hexdigest().upper()
 
 def hash_md5(password):
-    """MD5: Standard UTF-8 encoding."""
     return hashlib.md5(password.encode('utf-8')).hexdigest().upper()
 
 def hash_sha1(password):
-    """SHA1: Standard UTF-8 encoding."""
     return hashlib.sha1(password.encode('utf-8')).hexdigest().upper()
 
 def hash_sha256(password):
-    """SHA256: Standard UTF-8 encoding."""
     return hashlib.sha256(password.encode('utf-8')).hexdigest().upper()
 
 def generate_stream(segments):
-    """Yields joined strings from the iterator (C-based speed)."""
     return map("".join, itertools.product(segments, repeat=4))
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Keyboard-Walking Password Generator (Multi-Hash)",
-        epilog="Example: python kwpg.py -m v --hash ntlm -f ntlm_hashes.txt"
+        description="Keyboard-Walking Password Generator",
+        epilog="Example: python kbwalk.py -m v --hash ntlm -f ntlm.txt"
     )
     parser.add_argument('-m', '--mode', choices=['v', 'h', 'b'], required=True,
                         help="Mode: (v)ertical, (h)orizontal, or (b)oth")
@@ -63,21 +63,18 @@ def main():
                         help="Output file. If omitted, prints to STDOUT.")
     parser.add_argument('-l', '--length', type=int, default=4,
                         help="Length of horizontal walks (Default: 4)")
+
     parser.add_argument('--hash', choices=['none', 'ntlm', 'md5', 'sha1', 'sha256'], default='none',
-                        help="Hashing algorithm to apply (Default: none)")
+                        help="Hashing algorithm (Default: none)")
 
     parser.add_argument('--format', choices=['plain', 'pwd:hash'], default='plain',
-                        help="Output format. 'plain' is just the hash (or pwd). 'pwd:hash' shows both.")
+                        help="Output format.")
     args = parser.parse_args()
     hash_func = None
-    if args.hash == 'ntlm':
-        hash_func = hash_ntlm
-    elif args.hash == 'md5':
-        hash_func = hash_md5
-    elif args.hash == 'sha1':
-        hash_func = hash_sha1
-    elif args.hash == 'sha256':
-        hash_func = hash_sha256
+    if args.hash == 'ntlm': hash_func = hash_ntlm
+    elif args.hash == 'md5': hash_func = hash_md5
+    elif args.hash == 'sha1': hash_func = hash_sha1
+    elif args.hash == 'sha256': hash_func = hash_sha256
     segments = []
     if args.mode in ['v', 'b']:
         segments.extend(KB_VERTICAL)
@@ -87,13 +84,18 @@ def main():
     generator = generate_stream(segments)
     print_both = (args.format == 'pwd:hash')
     if args.file:
-        print(f"[*] Processing {total_combos:,} combinations...")
-        if hash_func:
-            print(f"[*] Hashing algorithm: {args.hash.upper()}")
+        print(f"[*] Mode: {args.mode.upper()} | Base Segments: {len(segments)}")
+        print(f"[*] Hashing: {args.hash.upper()} | Output: {args.file}")
+        print(f"[*] Generating {total_combos:,} combinations...")
         try:
             with open(args.file, 'w') as f:
                 chunk = []
                 count = 0
+                if TQDM_AVAILABLE:
+                    pbar = tqdm(total=total_combos, unit="pw", unit_scale=True, smoothing=0.1)
+                else:
+                    pbar = None
+                    print("[*] tqdm not found. Using simple counter.")
                 for password in generator:
                     output_line = password
                     if hash_func:
@@ -105,12 +107,17 @@ def main():
                     chunk.append(output_line)
                     if len(chunk) >= BUFFER_SIZE:
                         f.write('\n'.join(chunk) + '\n')
-                        count += len(chunk)
+                        if pbar:
+                            pbar.update(len(chunk))
+                        else:
+                            count += len(chunk)
+                            sys.stdout.write(f"\rProgress: {count:,} / {total_combos:,}")
+                            sys.stdout.flush()
                         chunk = []
-                        print(f"\rProgress: {count:,} / {total_combos:,}", end='', flush=True)
                 if chunk:
                     f.write('\n'.join(chunk) + '\n')
-                    count += len(chunk)
+                    if pbar: pbar.update(len(chunk))
+                if pbar: pbar.close()
             print(f"\n[+] Done! Output saved to {args.file}")
         except IOError as e:
             sys.stderr.write(f"\n[!] Error: {e}\n")
@@ -128,3 +135,13 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# BRIDGE FOR COMPLEXITY SCANNER (https://github.com/antonhibl/occam)
+class Solution:
+    def run_analysis_entry(self, data):
+        if isinstance(data, list): segments = [str(x) for x in data]
+        elif isinstance(data, int): segments = [str(i) for i in range(data)]
+        else: segments = ['1qaz']
+
+        iterator = generate_stream(segments)
+        for _ in iterator: pass
