@@ -93,7 +93,7 @@ python3 occam.py kbwalk.py --type list --max_n 80 --output complexity.png
 Here are my results running the scanner myself:
 
 ```bash
-┌──(occam-env)(ahibl㉿darkwolf-top)-[~/tmp/occam]
+┌──(occam-env)(kali@kali)-[~/occam]
 └─$ python3 occam.py testing/kbwalk.py --type list --max_n 100 --dump --output testing/kbwalk_graph.png
 
 =================================================================
