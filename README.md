@@ -1,4 +1,4 @@
-**# Keyboard Walk Generator
+# Keyboard Walk Generator
 
 A high-performance Python tool for generating password wordlists based on keyboard walking patterns (e.g., `1qaz`, `xsw2`, `qwer`). This tool is optimized for speed using buffered I/O and C-based iterators to handle massive lists (33M+ combinations) efficiently.
 
