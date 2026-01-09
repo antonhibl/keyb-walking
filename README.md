@@ -60,6 +60,7 @@ python3 kbwalk.py -m v --hash sha1 --format pwd:hash -f combos.txt
 
 ### Arguments
 
+* `--help`: Show the help menu, explaining basic flag options and usage.
 * `-m`, `--mode`: Pattern mode (`v` = vertical, `h` = horizontal, `b` = both).
 * `-f`, `--file`: Output filename (optional, prints to STDOUT if omitted).
 * `-l`, `--length`: Length of horizontal walk segments (default: 4).
