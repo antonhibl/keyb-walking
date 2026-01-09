@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+*.log
+
+# --- Project Output (IMPORTANT) ---
+# Ignore all text files to prevent committing massive wordlists
+*.txt
+# In case you use other extensions for outputs
+*.csv
+*.json
+
+# --- Windows ---
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msm
+*.msp
+
+# --- Emacs ---
+*~
+\#*\#
+.\#*
+auto-save-list
+dist/
+flycheck_*
+
+# --- Vim ---
+*.swp
+*.swo
+*.swn
+.netrwhist
+*~
