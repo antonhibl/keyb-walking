@@ -60,4 +60,5 @@ python3 kbwalk_ntlm.py -m v --hash ntlm --format pwd:hash -f combos.txt
 This tool is designed for security research, authorized penetration testing, and educational purposes only. The authors are not responsible for misuse.
 
 Original Author: Ronald Broberg
+<br>
 Edited by: Austin Scott & Anton Hibl
