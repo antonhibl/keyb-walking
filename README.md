@@ -95,134 +95,129 @@ Here are my results running the scanner myself:
 ```bash
 ┌──(occam-env)(kali@kali)-[~/occam]
 └─$ python3 occam.py testing/kbwalk.py --type list --max_n 100 --dump --output testing/kbwalk_graph.png
-
-=================================================================
-Analyzing: testing/kbwalk.py
-Pattern:   random
-=================================================================
+===========================================================================
+Analyzing: ../keyb-walking/kbwalk.py
+Pattern:   random
+===========================================================================
 
 -----------------------------------------------------------------
 STATIC ANALYSIS: run_analysis_entry
 -----------------------------------------------------------------
-Lines of Code (LOC):       14
-Cyclomatic Complexity:     4 (Low)
-Max Loop Nesting:          1 -> Likely O(N)
-Variable Accesses ([]):    0
-Math Operations:           0
-Function Calls:            6
-Bytecode Instructions:     78
-Control Flow Jumps:        7
+Lines of Code (LOC):       7
+Cyclomatic Complexity:     4 (Low)
+Max Loop Nesting:          1 -> Likely O(N)
+Variable Accesses ([]):    0
+Math Operations:           0
+Function Calls:            6
+Bytecode Instructions:     78
+Control Flow Jumps:        7
 
 [Bytecode Dump]
- 134            RESUME                   0
+ 141            RESUME                   0
 
- 139            LOAD_GLOBAL              1 (isinstance + NULL)
-                LOAD_FAST                1 (data)
-                LOAD_GLOBAL              2 (list)
-                CALL                     2
-                TO_BOOL
-                POP_JUMP_IF_FALSE       28 (to L5)
+ 142            LOAD_GLOBAL              1 (isinstance + NULL)
+                LOAD_FAST                1 (data)
+                LOAD_GLOBAL              2 (list)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       28 (to L5)
+                LOAD_FAST                1 (data)
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      2 (x)
+                SWAP                     2
+        L1:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L2:     FOR_ITER                14 (to L3)
+                STORE_FAST               2 (x)
+                LOAD_GLOBAL              5 (str + NULL)
+                LOAD_FAST                2 (x)
+                CALL                     1
+                LIST_APPEND              2
+                JUMP_BACKWARD           16 (to L2)
+        L3:     END_FOR
+                POP_TOP
+        L4:     STORE_FAST               3 (segments)
+                STORE_FAST               2 (x)
+                JUMP_FORWARD            61 (to L11)
 
- 140            LOAD_FAST                1 (data)
-                GET_ITER
-                LOAD_FAST_AND_CLEAR      2 (x)
-                SWAP                     2
-        L1:     BUILD_LIST               0
-                SWAP                     2
-                GET_ITER
-        L2:     FOR_ITER                14 (to L3)
-                STORE_FAST               2 (x)
-                LOAD_GLOBAL              5 (str + NULL)
-                LOAD_FAST                2 (x)
-                CALL                     1
-                LIST_APPEND              2
-                JUMP_BACKWARD           16 (to L2)
-        L3:     END_FOR
-                POP_TOP
-        L4:     STORE_FAST               3 (segments)
-                STORE_FAST               2 (x)
-                JUMP_FORWARD            61 (to L11)
+ 143    L5:     LOAD_GLOBAL              1 (isinstance + NULL)
+                LOAD_FAST                1 (data)
+                LOAD_GLOBAL              6 (int)
+                CALL                     2
+                TO_BOOL
+                POP_JUMP_IF_FALSE       37 (to L10)
+                LOAD_GLOBAL              9 (range + NULL)
+                LOAD_FAST                1 (data)
+                CALL                     1
+                GET_ITER
+                LOAD_FAST_AND_CLEAR      4 (i)
+                SWAP                     2
+        L6:     BUILD_LIST               0
+                SWAP                     2
+                GET_ITER
+        L7:     FOR_ITER                14 (to L8)
+                STORE_FAST               4 (i)
+                LOAD_GLOBAL              5 (str + NULL)
+                LOAD_FAST                4 (i)
+                CALL                     1
+                LIST_APPEND              2
+                JUMP_BACKWARD           16 (to L7)
+        L8:     END_FOR
+                POP_TOP
+        L9:     STORE_FAST               3 (segments)
+                STORE_FAST               4 (i)
+                JUMP_FORWARD             3 (to L11)
 
- 141    L5:     LOAD_GLOBAL              1 (isinstance + NULL)
-                LOAD_FAST                1 (data)
-                LOAD_GLOBAL              6 (int)
-                CALL                     2
-                TO_BOOL
-                POP_JUMP_IF_FALSE       37 (to L10)
+ 144   L10:     LOAD_CONST               1 ('1qaz')
+                BUILD_LIST               1
+                STORE_FAST               3 (segments)
 
- 142            LOAD_GLOBAL              9 (range + NULL)
-                LOAD_FAST                1 (data)
-                CALL                     1
-                GET_ITER
-                LOAD_FAST_AND_CLEAR      4 (i)
-                SWAP                     2
-        L6:     BUILD_LIST               0
-                SWAP                     2
-                GET_ITER
-        L7:     FOR_ITER                14 (to L8)
-                STORE_FAST               4 (i)
-                LOAD_GLOBAL              5 (str + NULL)
-                LOAD_FAST                4 (i)
-                CALL                     1
-                LIST_APPEND              2
-                JUMP_BACKWARD           16 (to L7)
-        L8:     END_FOR
-                POP_TOP
-        L9:     STORE_FAST               3 (segments)
-                STORE_FAST               4 (i)
-                JUMP_FORWARD             3 (to L11)
+ 146   L11:     LOAD_GLOBAL             11 (generate_stream + NULL)
+                LOAD_FAST                3 (segments)
+                CALL                     1
+                STORE_FAST               5 (iterator)
 
- 144   L10:     LOAD_CONST               1 ('1qaz')
-                BUILD_LIST               1
-                STORE_FAST               3 (segments)
+ 147            LOAD_FAST                5 (iterator)
+                GET_ITER
+       L12:     FOR_ITER                 3 (to L13)
+                STORE_FAST               6 (_)
+                JUMP_BACKWARD            5 (to L12)
+       L13:     END_FOR
+                POP_TOP
+                RETURN_CONST             0 (None)
 
- 145   L11:     LOAD_GLOBAL             11 (generate_stream + NULL)
-                LOAD_FAST                3 (segments)
-                CALL                     1
-                STORE_FAST               5 (iterator)
+  --   L14:     SWAP                     2
+                POP_TOP
 
- 146            LOAD_FAST                5 (iterator)
-                GET_ITER
-       L12:     FOR_ITER                 3 (to L13)
-                STORE_FAST               6 (_)
+ 142            SWAP                     2
+                STORE_FAST               2 (x)
+                RERAISE                  0
 
- 147            JUMP_BACKWARD            5 (to L12)
+  --   L15:     SWAP                     2
+                POP_TOP
 
- 146   L13:     END_FOR
-                POP_TOP
-                RETURN_CONST             2 (None)
-
-  --   L14:     SWAP                     2
-                POP_TOP
-
- 140            SWAP                     2
-                STORE_FAST               2 (x)
-                RERAISE                  0
-
-  --   L15:     SWAP                     2
-                POP_TOP
-
- 142            SWAP                     2
-                STORE_FAST               4 (i)
-                RERAISE                  0
+ 143            SWAP                     2
+                STORE_FAST               4 (i)
+                RERAISE                  0
 ExceptionTable:
-  L1 to L4 -> L14 [2]
-  L6 to L9 -> L15 [2]
+  L1 to L4 -> L14 [2]
+  L6 to L9 -> L15 [2]
 -----------------------------------------------------------------
-N          | Time (s)        | Memory (B)      | Growth
------------------------------------------------------------------
-10         | 0.002347        | 7096            | N/A
-20         | 0.038002        | 7444            | 16.2x
-30         | 0.188384        | 8029            | 5.0x
-40         | 0.591005        | 8617            | 3.1x
-50         | 1.401116        | 9224            | 2.4x
-60         | 2.898512        | 9842            | 2.1x
-70         | 5.507042        | 10455           | 1.9x
-80         | 9.900729        | 11108           | 1.8x
-90         | 15.631332        | 11625           | 1.6x
-100        | 23.053735        | 12269           | 1.5x
------------------------------------------------------------------
-Time Slope:  4.00 -> O(n^k) Polynomial or Exponential
+N        | Time (avg)   | Time StdDev  | Memory (avg) | Stability (CV)
+---------------------------------------------------------------------------
+10       | 0.002631     | 0.000537     | 6890         | 0.2041
+20       | 0.037357     | 0.002002     | 7388         | 0.0536
+30       | 0.185902     | 0.002776     | 7934         | 0.0149
+40       | 0.568012     | 0.002869     | 8484         | 0.0051
+50       | 1.440236     | 0.029502     | 9063         | 0.0205
+60       | 2.981394     | 0.062462     | 9662         | 0.0210
+70       | 5.517863     | 0.081578     | 10288        | 0.0148
+80       | 9.416191     | 0.131528     | 10943        | 0.0140
+90       | 14.893127     | 0.171332     | 11473        | 0.0115
+100      | 22.543129     | 0.395457     | 12131        | 0.0175
+---------------------------------------------------------------------------
+Time Slope:  3.95 (R^2: 0.9999) -> O(n^k) Polynomial or Exponential
 Space Slope: 0.25 -> O(log n) Logarithmic
 
 Generating visualization -> testing/kbwalk_graph.png ...
